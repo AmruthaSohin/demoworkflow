@@ -1,0 +1,26 @@
+name: Test HTML Email Content Generation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test_html_content:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Generate HTML email content
+        run: |
+          echo "<html><body><table><tr><th>Workflow Name</th><th>Status</th><th>Details</th></tr><tr><td>Build</td><td>Success</td><td><a href='URL_TO_DETAILS'>View Details</a></td></tr><tr><td>Test</td><td>Failed</td><td><a href='URL_TO_DETAILS'>View Details</a></td></tr></table></body></html>" > email_content.html
+
+      - name: Validate HTML content
+        run: |
+          if grep -q "<table>" email_content.html; then
+            echo "HTML content contains a table."
+          else
+            echo "HTML content does not contain a table."
+            exit 1
+          fi
